@@ -1,0 +1,38 @@
+{
+  "name": "infinite-scroll",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "test": "vitest",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.10.1",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-window": "^1.8.11",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.10.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-window": "^1.8.8",
+    "@vitejs/plugin-react": "^4.6.0",
+    "jsdom": "^29.0.1",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4",
+    "vitest": "^4.1.2"
+  }
+}
