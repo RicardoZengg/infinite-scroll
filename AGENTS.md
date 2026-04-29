@@ -1,44 +1,29 @@
-# Repository Guidelines
+<!-- TRELLIS:START -->
+# Trellis Instructions
 
-## Project Structure & Module Organization
-- `src/` contains the active frontend implementation:
-  - `components/` for workspace UI pieces (`WorkspaceCanvas`, `RowView`, `TerminalCell`, `NotesCell`, `HelpOverlay`)
-  - `store/` for workspace state and actions (`workspaceStore`)
-  - `lib/` for typed Tauri bridge and xterm integration
-  - `hooks/` for terminal lifecycle and keyboard shortcuts
-- `src-tauri/` contains the active backend implementation:
-  - `model.rs` shared state model
-  - `persistence.rs` state file load/save and corruption fallback
-  - `shell.rs` shell detection
-  - `session.rs` ConPTY session lifecycle and event payloads
-  - `commands/` Tauri command entrypoints
-- Legacy macOS Swift code is archived at `legacy/macos-swift/` and is not part of active development.
+These instructions are for AI assistants working in this project.
 
-## Build, Test, and Development Commands
-- `npm run test -- --run` for frontend tests.
-- `cargo test --manifest-path src-tauri/Cargo.toml` for Rust tests.
-- `npm run build` for TypeScript + Vite production build checks.
-- `npm run tauri:dev` to run the app locally on Windows.
-- `npm run tauri:build` to compile the Windows executable.
+This project is managed by Trellis. The working knowledge you need lives under `.trellis/`:
 
-## Coding Style & Naming Conventions
-- TypeScript/React:
-  - 2-space indentation, strict types, `UpperCamelCase` components, `lowerCamelCase` values/functions.
-  - Keep UI components focused; move orchestration and side effects to hooks/store/lib.
-- Rust:
-  - Standard Rust style with clear error enums via `thiserror`.
-  - Keep command handlers thin and business logic in modules.
-- Avoid unrelated refactors in feature/bugfix changes.
+- `.trellis/workflow.md` — development phases, when to create tasks, skill routing
+- `.trellis/spec/` — package- and layer-scoped coding guidelines (read before writing code in a given layer)
+- `.trellis/workspace/` — per-developer journals and session traces
+- `.trellis/tasks/` — active and archived tasks (PRDs, research, jsonl context)
 
-## Testing Guidelines
-- Every behavior change should include either frontend tests (Vitest + Testing Library), Rust unit tests, or both.
-- Prefer targeted tests first (`workspaceStore`, `WorkspaceCanvas`, `TerminalCell`, `shell`, `session`, `persistence`), then run full suites.
-- Before claiming completion, run at minimum:
-  - `npm run test -- --run`
-  - `cargo test --manifest-path src-tauri/Cargo.toml`
-  - `npm run build`
+If a Trellis command is available on your platform (e.g. `/trellis:finish-work`, `/trellis:continue`), prefer it over manual steps. Not every platform exposes every command.
 
-## Security & Configuration Tips
-- Never hardcode secrets or machine-specific credentials.
-- Keep persistence path behavior aligned with `%AppData%/InfiniteScroll/state.json`.
-- Shell/session changes must degrade safely: missing shell should produce error state for that cell without crashing the app.
+If you're using Codex or another agent-capable tool, additional project-scoped helpers may live in:
+- `.agents/skills/` — reusable Trellis skills
+- `.codex/agents/` — optional custom subagents
+
+## Subagents
+
+- ALWAYS wait for all subagents to complete before yielding.
+- Spawn subagents automatically when:
+  - Parallelizable work (e.g., install + verify, npm test + typecheck, multiple tasks from plan)
+  - Long-running or blocking tasks where a worker can run independently.
+  - Isolation for risky changes or checks
+
+Managed by Trellis. Edits outside this block are preserved; edits inside may be overwritten by a future `trellis update`.
+
+<!-- TRELLIS:END -->
