@@ -1,37 +1,37 @@
 :root {
-  /* Background — near-black, no colored radials */
-  --bg-top: #1D1D1F;
-  --bg-bottom: #000000;
+  /* Background — Dracula dark */
+  --bg-top: #282a36;
+  --bg-bottom: #1e1f29;
 
-  /* Panels — neutral semi-transparent surfaces */
-  --panel: rgba(30, 30, 30, 0.72);
-  --panel-hover: rgba(40, 40, 40, 0.82);
+  /* Panels — Dracula elevated */
+  --panel: rgba(40, 42, 54, 0.88);
+  --panel-hover: rgba(68, 71, 90, 0.92);
 
-  /* Borders — neutral white, very low opacity (Apple standard) */
-  --panel-border: rgba(255, 255, 255, 0.08);
-  --panel-border-hover: rgba(255, 255, 255, 0.14);
+  /* Borders — Dracula comment color, subtle */
+  --panel-border: rgba(98, 114, 164, 0.20);
+  --panel-border-hover: rgba(98, 114, 164, 0.35);
 
-  /* Focus — Apple system blue */
-  --focus: #0A84FF;
-  --focus-glow: rgba(10, 132, 255, 0.25);
+  /* Focus — Dracula purple */
+  --focus: #bd93f9;
+  --focus-glow: rgba(189, 147, 249, 0.30);
 
-  /* Text — white with opacity hierarchy (Apple label system) */
-  --text-main: rgba(255, 255, 255, 0.85);
-  --text-muted: rgba(255, 255, 255, 0.55);
-  --text-bright: #FFFFFF;
+  /* Text — Dracula foreground hierarchy */
+  --text-main: #f8f8f2;
+  --text-muted: #6272a4;
+  --text-bright: #ffffff;
 
-  /* Accent — Apple system blue */
-  --accent: #0A84FF;
-  --accent-dim: rgba(10, 132, 255, 0.12);
-  --accent-muted: rgba(10, 132, 255, 0.40);
+  /* Accent — Dracula purple */
+  --accent: #bd93f9;
+  --accent-dim: rgba(189, 147, 249, 0.12);
+  --accent-muted: rgba(189, 147, 249, 0.40);
 
-  /* Status colors — Apple system colors (dark mode) */
-  --success: #30D158;
-  --danger: #FF453A;
-  --danger-dim: rgba(255, 69, 58, 0.12);
+  /* Status — Dracula palette */
+  --success: #50fa7b;
+  --danger: #ff5555;
+  --danger-dim: rgba(255, 85, 85, 0.12);
 
-  /* Surface — neutral elevated material */
-  --surface: rgba(255, 255, 255, 0.06);
+  /* Surface — Dracula elevated */
+  --surface: rgba(68, 71, 90, 0.50);
 
   /* Radii — Apple standard */
   --radius-sm: 5px;
