@@ -1,0 +1,16 @@
+.canvas {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 6px;
+}
+
+.virtualList {
+  overflow-x: hidden !important;
+}
+
+.virtualRowShell {
+  padding: 0 2px 8px;
+}

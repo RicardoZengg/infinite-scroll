@@ -1,0 +1,123 @@
+.cell {
+  min-height: clamp(260px, 38vh, 600px);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  backdrop-filter: blur(20px) saturate(150%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.cell:hover {
+  border-color: var(--panel-border-hover);
+}
+
+.cell.focused {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 1px var(--focus-glow), 0 0 20px var(--focus-glow);
+}
+
+.cellHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--panel-border);
+  background: var(--surface);
+}
+
+.cellHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* Status indicator */
+.statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background var(--transition-fast);
+}
+
+.statusDot.running {
+  background: var(--success);
+  box-shadow: 0 0 6px rgba(48, 209, 88, 0.5);
+}
+
+.statusDot.error {
+  background: var(--danger);
+  box-shadow: 0 0 6px rgba(255, 69, 58, 0.5);
+}
+
+.statusDot.exited {
+  background: var(--text-muted);
+}
+
+.cellLabel {
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.statusLabel {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-family: "SF Mono", ui-monospace, "Cascadia Code", "JetBrains Mono", "Fira Code", Consolas, "Courier New", monospace;
+  letter-spacing: 0.02em;
+}
+
+/* Terminal host */
+.terminalHost {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Fallback (error/exited) */
+.fallback {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 14px;
+}
+
+.fallback p {
+  margin: 0;
+  color: var(--danger);
+  font-size: 0.88rem;
+}
+
+.fallback code {
+  display: block;
+  max-width: 100%;
+  white-space: pre-wrap;
+  font-family: "SF Mono", ui-monospace, "Cascadia Code", "JetBrains Mono", "Fira Code", Consolas, "Courier New", monospace;
+  color: var(--danger);
+  font-size: 0.8rem;
+  background: var(--danger-dim);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 69, 58, 0.2);
+}
+
+.fallback button {
+  border: 1px solid var(--accent-muted);
+  border-radius: var(--radius-sm);
+  padding: 5px 14px;
+  color: var(--accent);
+  background: var(--accent-dim);
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: background var(--transition-fast);
+}
+
+.fallback button:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--text-bright);
+}

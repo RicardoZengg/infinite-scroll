@@ -2,6 +2,7 @@ import { memo } from "react";
 
 import { NotesCell } from "./NotesCell";
 import { TerminalCell } from "./TerminalCell";
+import styles from "./RowView.module.css";
 import type { Row, TerminalStatus } from "../types/workspace";
 import type { AppTexts } from "../i18n";
 
@@ -9,6 +10,7 @@ type RowViewProps = {
   row: Row;
   focusedCellIdInRow: string | null;
   fontSize: number;
+  isSingleRow: boolean;
   onFocusCell: (cellId: string) => void;
   onCloseFocusedCell: () => void;
   onAddNotesToRow: (rowId: string) => void;
@@ -22,6 +24,7 @@ export const RowView = memo(function RowView({
   row,
   focusedCellIdInRow,
   fontSize,
+  isSingleRow,
   onFocusCell,
   onCloseFocusedCell,
   onAddNotesToRow,
@@ -31,10 +34,10 @@ export const RowView = memo(function RowView({
   texts,
 }: RowViewProps) {
   return (
-    <section className="workspace-row" data-testid={`row-${row.id}`}>
-      <header className="row-header">
-        <h3>{row.title}</h3>
-        <div>
+    <section className={`${styles.row}${isSingleRow ? ` ${styles.singleRow}` : ""}`} data-testid={`row-${row.id}`}>
+      <header className={styles.rowHeader}>
+        <h3 className={styles.rowTitle}>{row.title}</h3>
+        <div className={styles.rowActions}>
           <button
             type="button"
             onClick={() => {
@@ -49,7 +52,7 @@ export const RowView = memo(function RowView({
         </div>
       </header>
 
-      <div className="row-cells">
+      <div className={styles.rowCells}>
         {row.cells.map((cell) =>
           cell.type === "terminal" ? (
             <TerminalCell

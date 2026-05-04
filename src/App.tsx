@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import styles from "./components/App.module.css";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { HelpOverlay } from "./components/HelpOverlay";
 import { WorkspaceCanvas } from "./components/WorkspaceCanvas";
 import { detectInitialLanguage, getTexts, persistLanguage, type AppLanguage } from "./i18n";
@@ -198,38 +200,42 @@ function App() {
   }, []);
 
   return (
-    <main className="app-shell">
-      <header className="app-header">
-        <div>
-          <p className="eyebrow">{texts.eyebrow}</p>
-          <h1>{texts.workspaceTitle}</h1>
-          <p>{statusLabel}</p>
-          {loadError ? <p className="error-inline">{loadError}</p> : null}
-        </div>
-        <div className="header-actions">
-          <button type="button" onClick={addRowBelowFocused}>
-            {texts.newRow}
-          </button>
-          <button type="button" onClick={duplicateFocusedTerminal}>
-            {texts.duplicateTerminal}
-          </button>
-          <button type="button" onClick={toggleHelp}>
-            {texts.help}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setLanguage((previous) => (previous === "zh-CN" ? "en-US" : "zh-CN"));
-            }}
-          >
-            {texts.languageSwitch}
-          </button>
-        </div>
-      </header>
+    <ErrorBoundary>
+      <main className={styles.shell}>
+        <header className={styles.header}>
+          <div className={styles.headerLeft}>
+            <div>
+              <p className={styles.eyebrow}>{texts.eyebrow}</p>
+              <h1 className={styles.headerTitle}>{texts.workspaceTitle}</h1>
+            </div>
+            <span className={styles.headerStatus}>{statusLabel}</span>
+            {loadError ? <span className={styles.errorInline}>{loadError}</span> : null}
+          </div>
+          <div className={styles.actions}>
+            <button type="button" onClick={addRowBelowFocused}>
+              {texts.newRow}
+            </button>
+            <button type="button" onClick={duplicateFocusedTerminal}>
+              {texts.duplicateTerminal}
+            </button>
+            <button type="button" onClick={toggleHelp}>
+              {texts.help}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setLanguage((previous) => (previous === "zh-CN" ? "en-US" : "zh-CN"));
+              }}
+            >
+              {texts.languageSwitch}
+            </button>
+          </div>
+        </header>
 
-      <WorkspaceCanvas texts={texts} onActiveRowIdsChange={handleActiveRowIdsChange} />
-      <HelpOverlay open={isHelpOpen} onClose={closeHelp} texts={texts} />
-    </main>
+        <WorkspaceCanvas texts={texts} onActiveRowIdsChange={handleActiveRowIdsChange} />
+        <HelpOverlay open={isHelpOpen} onClose={closeHelp} texts={texts} />
+      </main>
+    </ErrorBoundary>
   );
 }
 

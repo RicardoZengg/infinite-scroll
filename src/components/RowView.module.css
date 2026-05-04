@@ -1,0 +1,86 @@
+.row {
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  backdrop-filter: blur(24px) saturate(150%);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(300px, 42vh, 680px);
+  transition: border-color var(--transition-normal);
+}
+
+.row:hover {
+  border-color: var(--panel-border-hover);
+}
+
+.rowHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 0 2px;
+}
+
+.rowTitle {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.rowActions {
+  display: flex;
+  gap: 4px;
+}
+
+.rowActions button {
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.72rem;
+  transition: all var(--transition-fast);
+}
+
+.rowActions button:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--text-bright);
+}
+
+.rowCells {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(300px, 36vw, 520px), 1fr));
+  gap: 8px;
+  flex: 1;
+  align-content: stretch;
+}
+
+/* Entry animation */
+@keyframes rowSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.row {
+  animation: rowSlideIn 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Single-row mode */
+.singleRow .rowCells {
+  grid-template-columns: repeat(auto-fit, minmax(clamp(300px, 36vw, 520px), 1fr));
+}
+
+.singleRow .row {
+  min-height: clamp(480px, calc(100vh - 200px), 920px);
+}

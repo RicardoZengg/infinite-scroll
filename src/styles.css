@@ -1,12 +1,46 @@
 :root {
-  --bg-top: #082f49;
-  --bg-bottom: #020617;
-  --panel: rgba(15, 23, 42, 0.88);
-  --panel-border: rgba(125, 211, 252, 0.28);
-  --focus: #facc15;
-  --text-main: #e2e8f0;
-  --text-muted: #94a3b8;
-  --accent: #38bdf8;
+  /* Background — near-black, no colored radials */
+  --bg-top: #1D1D1F;
+  --bg-bottom: #000000;
+
+  /* Panels — neutral semi-transparent surfaces */
+  --panel: rgba(30, 30, 30, 0.72);
+  --panel-hover: rgba(40, 40, 40, 0.82);
+
+  /* Borders — neutral white, very low opacity (Apple standard) */
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-border-hover: rgba(255, 255, 255, 0.14);
+
+  /* Focus — Apple system blue */
+  --focus: #0A84FF;
+  --focus-glow: rgba(10, 132, 255, 0.25);
+
+  /* Text — white with opacity hierarchy (Apple label system) */
+  --text-main: rgba(255, 255, 255, 0.85);
+  --text-muted: rgba(255, 255, 255, 0.55);
+  --text-bright: #FFFFFF;
+
+  /* Accent — Apple system blue */
+  --accent: #0A84FF;
+  --accent-dim: rgba(10, 132, 255, 0.12);
+  --accent-muted: rgba(10, 132, 255, 0.40);
+
+  /* Status colors — Apple system colors (dark mode) */
+  --success: #30D158;
+  --danger: #FF453A;
+  --danger-dim: rgba(255, 69, 58, 0.12);
+
+  /* Surface — neutral elevated material */
+  --surface: rgba(255, 255, 255, 0.06);
+
+  /* Radii — Apple standard */
+  --radius-sm: 5px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+
+  /* Transitions — Apple easing */
+  --transition-fast: 120ms cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-normal: 250ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -22,278 +56,19 @@ body,
 
 body {
   color: var(--text-main);
-  font-family: "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.2), transparent 36%),
-    radial-gradient(circle at 85% 0%, rgba(250, 204, 21, 0.16), transparent 32%),
-    linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+               Roboto, "Noto Sans", "Noto Sans SC", "Microsoft YaHei",
+               Helvetica, Arial, sans-serif,
+               "Apple Color Emoji", "Segoe UI Emoji";
+  background: linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+  background-attachment: fixed;
 }
 
 button {
   font: inherit;
 }
 
-.app-shell {
-  width: 100%;
-  max-width: none;
-  margin: 0 auto;
-  padding: 12px 12px 18px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  align-items: flex-start;
-  border: 1px solid var(--panel-border);
-  border-radius: 16px;
-  background: var(--panel);
-  padding: 18px 20px;
-  margin-bottom: 14px;
-}
-
-.eyebrow {
-  margin: 0 0 8px;
-  font-size: 0.82rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #bae6fd;
-}
-
-.app-header h1 {
-  margin: 0;
-  font-size: 1.9rem;
-}
-
-.app-header p {
-  margin: 6px 0 0;
-  color: var(--text-muted);
-}
-
-.error-inline {
-  color: #fca5a5;
-  font-family: "Consolas", "Courier New", monospace;
-  font-size: 0.9rem;
-}
-
-.header-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.header-actions button,
-.row-header button,
-.terminal-fallback button,
-.help-panel button {
-  border: 1px solid rgba(56, 189, 248, 0.5);
-  border-radius: 10px;
-  padding: 7px 12px;
-  color: #e0f2fe;
-  background: rgba(14, 116, 144, 0.28);
-  cursor: pointer;
-}
-
-.header-actions button:hover,
-.row-header button:hover,
-.terminal-fallback button:hover,
-.help-panel button:hover {
-  background: rgba(14, 116, 144, 0.42);
-}
-
-.workspace-canvas {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  padding-bottom: 8px;
-}
-
-.workspace-virtual-list {
-  overflow-x: hidden !important;
-}
-
-.virtual-row-shell {
-  padding-right: 4px;
-  padding-bottom: 12px;
-}
-
-.workspace-row {
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  border-radius: 14px;
-  background: rgba(2, 6, 23, 0.5);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  min-height: clamp(320px, 44vh, 720px);
-}
-
-.row-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.row-header h3 {
-  margin: 0;
-  font-size: 1rem;
-}
-
-.row-header div {
-  display: flex;
-  gap: 8px;
-}
-
-.row-cells {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(clamp(320px, 38vw, 560px), 1fr));
-  gap: 10px;
-  flex: 1;
-  align-content: stretch;
-}
-
-.cell {
-  min-height: clamp(280px, 40vh, 640px);
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  border-radius: 12px;
-  background: rgba(15, 23, 42, 0.85);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.cell.is-focused {
-  border-color: var(--focus);
-  box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.5);
-}
-
-.cell > header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-  color: #bfdbfe;
-  font-size: 0.88rem;
-}
-
-.terminal-host {
-  flex: 1;
-  min-height: 0;
-}
-
-.terminal-fallback {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  padding: 12px;
-}
-
-.terminal-fallback p {
-  margin: 0;
-  color: #fecaca;
-}
-
-.terminal-fallback code {
-  display: block;
-  max-width: 100%;
-  white-space: pre-wrap;
-  font-family: "Consolas", "Courier New", monospace;
-  color: #fca5a5;
-}
-
-.notes-cell textarea {
-  flex: 1;
-  width: 100%;
-  border: none;
-  outline: none;
-  resize: none;
-  padding: 10px;
-  background: rgba(15, 23, 42, 0.3);
-  color: #f8fafc;
-  font-family: "Consolas", "Courier New", monospace;
-}
-
-.workspace-canvas.single-row .workspace-row {
-  min-height: clamp(520px, calc(100vh - 190px), 1000px);
-}
-
-.workspace-canvas.single-row .cell {
-  min-height: clamp(500px, calc(100vh - 240px), 920px);
-}
-
-.help-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 6, 23, 0.68);
-  display: grid;
-  place-items: center;
-  z-index: 50;
-}
-
-.help-panel {
-  width: min(720px, calc(100vw - 32px));
-  border: 1px solid rgba(186, 230, 253, 0.45);
-  border-radius: 16px;
-  background: rgba(15, 23, 42, 0.95);
-  padding: 16px;
-}
-
-.help-panel header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.help-panel h2 {
-  margin: 0;
-}
-
-.help-panel ul {
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 10px;
-}
-
-.help-panel li {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  align-items: center;
-  gap: 10px;
-}
-
-.help-panel kbd {
-  border: 1px solid rgba(226, 232, 240, 0.3);
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-family: "Consolas", "Courier New", monospace;
-  color: #e0f2fe;
-  background: rgba(30, 41, 59, 0.75);
-}
-
 @media (max-width: 900px) {
-  .app-shell {
-    width: 100%;
-    padding-top: 14px;
-  }
-
-  .app-header {
-    flex-direction: column;
-  }
-
-  .workspace-canvas {
-    min-height: auto;
-  }
-
   .help-panel li {
     grid-template-columns: 1fr;
   }

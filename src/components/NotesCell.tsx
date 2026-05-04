@@ -2,6 +2,7 @@ import { memo } from "react";
 
 import type { NotesCell as NotesCellModel } from "../types/workspace";
 import type { AppTexts } from "../i18n";
+import styles from "./NotesCell.module.css";
 
 type NotesCellProps = {
   cell: NotesCellModel;
@@ -22,14 +23,16 @@ export const NotesCell = memo(function NotesCell({
 }: NotesCellProps) {
   return (
     <article
-      className={`cell notes-cell ${isFocused ? "is-focused" : ""}`}
+      className={`${styles.cell}${isFocused ? ` ${styles.focused}` : ""}`}
       onMouseDown={() => onFocus(cell.id)}
       data-testid={`notes-cell-${cell.id}`}
     >
-      <header>
-        <span>{texts.notes}</span>
+      <header className={styles.cellHeader}>
+        <span className={styles.noteIcon} />
+        <span className={styles.cellLabel}>{texts.notes}</span>
       </header>
       <textarea
+        className={styles.textarea}
         value={cell.text}
         onFocus={() => onFocus(cell.id)}
         onChange={(event) => onChange(cell.id, event.target.value)}

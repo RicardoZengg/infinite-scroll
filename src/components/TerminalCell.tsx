@@ -1,6 +1,7 @@
 import { memo, useCallback } from "react";
 
 import { useTerminalSession } from "../hooks/useTerminalSession";
+import styles from "./TerminalCell.module.css";
 import type { TerminalCell as TerminalCellModel, TerminalStatus } from "../types/workspace";
 import type { AppTexts } from "../i18n";
 
@@ -47,19 +48,22 @@ export const TerminalCell = memo(function TerminalCell({
 
   return (
     <article
-      className={`cell terminal-cell ${isFocused ? "is-focused" : ""}`}
+      className={`${styles.cell}${isFocused ? ` ${styles.focused}` : ""}`}
       onMouseDown={() => onFocus(cell.id)}
       data-testid={`terminal-cell-${cell.id}`}
     >
-      <header>
-        <span>{texts.terminal}</span>
-        <small>{status}</small>
+      <header className={styles.cellHeader}>
+        <div className={styles.cellHeaderLeft}>
+          <span className={`${styles.statusDot} ${styles[status] ?? ""}`} />
+          <span className={styles.cellLabel}>{texts.terminal}</span>
+        </div>
+        <small className={styles.statusLabel}>{status}</small>
       </header>
 
       {status === "running" ? (
-        <div className="terminal-host" ref={hostRef} aria-label={`${texts.terminal} ${cell.id}`} />
+        <div className={styles.terminalHost} ref={hostRef} aria-label={`${texts.terminal} ${cell.id}`} />
       ) : (
-        <div className="terminal-fallback">
+        <div className={styles.fallback}>
           <p>{status === "error" ? texts.terminalStartFailed : texts.terminalExited}</p>
           {errorMessage ? <code>{errorMessage}</code> : null}
           <button

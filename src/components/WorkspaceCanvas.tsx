@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { VariableSizeList, type ListChildComponentProps } from "react-window";
 
 import type { AppTexts } from "../i18n";
+import styles from "./WorkspaceCanvas.module.css";
 import { useElementSize } from "../hooks/useElementSize";
 import { useShortcuts } from "../hooks/useShortcuts";
 import { useWorkspaceStore } from "../store/useWorkspaceStore";
@@ -18,6 +19,7 @@ type RowItemData = {
   focusedCellId: string | null;
   fontSize: number;
   texts: AppTexts;
+  isSingleRow: boolean;
   onFocusCell: (cellId: string) => void;
   onCloseFocusedCell: () => void;
   onAddNotesToRow: (rowId: string) => void;
@@ -61,11 +63,12 @@ const RowItem = ({ index, style, data }: ListChildComponentProps<RowItemData>) =
     : null;
 
   return (
-    <div style={style} className="virtual-row-shell">
+    <div style={style} className={styles.virtualRowShell}>
       <RowView
         row={row}
         focusedCellIdInRow={focusedCellIdInRow}
         fontSize={data.fontSize}
+        isSingleRow={data.isSingleRow}
         onFocusCell={data.onFocusCell}
         onCloseFocusedCell={data.onCloseFocusedCell}
         onAddNotesToRow={data.onAddNotesToRow}
@@ -165,6 +168,7 @@ export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvas
       focusedCellId,
       fontSize,
       texts,
+      isSingleRow: rows.length === 1,
       onFocusCell: setFocusedCellId,
       onCloseFocusedCell,
       onAddNotesToRow,
@@ -178,6 +182,7 @@ export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvas
       fontSize,
       texts,
       setFocusedCellId,
+      rows.length,
       onCloseFocusedCell,
       onAddNotesToRow,
       updateNotesCell,
@@ -215,12 +220,12 @@ export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvas
 
   return (
     <div
-      className={`workspace-canvas ${rows.length === 1 ? "single-row" : ""}`}
+      className={`${styles.canvas}${rows.length === 1 ? ` ${styles.singleRow}` : ""}`}
       data-testid="workspace-canvas"
       ref={viewportRef}
     >
       <VariableSizeList<RowItemData>
-        className="workspace-virtual-list"
+        className={styles.virtualList}
         ref={listRef}
         width={size.width}
         height={size.height}
