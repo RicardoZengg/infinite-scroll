@@ -1,0 +1,56 @@
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 2px;
+}
+
+.skeletonRow {
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  padding: 10px;
+  animation: skeletonPulse 1.8s ease-in-out infinite;
+}
+
+.skeletonHeader {
+  margin-bottom: 10px;
+}
+
+.skeletonCells {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.skeletonBar {
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--surface) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    var(--surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+
+.skeletonTitle {
+  height: 14px;
+  width: 140px;
+}
+
+.skeletonCell {
+  height: 240px;
+  min-height: 240px;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

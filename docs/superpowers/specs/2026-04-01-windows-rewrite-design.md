@@ -22,12 +22,12 @@
   - 不要求 shell 进程在应用关闭后继续存活
 - 快捷键策略：Windows 原生化
   - 将原 `Cmd` 体系改为 `Ctrl` 体系
+- 保留 `tmux` 作为会话后端
+- 实现“关闭应用后 shell 会话继续存活”的强一致恢复
 
 ## 非目标
 
-- 不保留 `tmux` 作为会话后端
 - 不保留 macOS 专属 AppKit / SwiftUI / SwiftTerm 实现
-- 不实现“关闭应用后 shell 会话继续存活”的强一致恢复
 - 不在本阶段同时维护 macOS 与 Windows 双实现
 
 ## 新架构

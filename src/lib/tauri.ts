@@ -25,6 +25,16 @@ type CellRequest = {
   cellId: string;
 };
 
+export type WorkspaceInfo = {
+  id: string;
+  name: string;
+};
+
+export type WorkspaceManifest = {
+  workspaces: WorkspaceInfo[];
+  currentWorkspaceId: string;
+};
+
 export type TerminalOutputEvent = {
   cellId: string;
   data: string;
@@ -200,3 +210,42 @@ export const subscribeTerminalCwd = (
   cellId: string,
   onEvent: (payload: TerminalCwdEvent) => void,
 ) => subscribeCellEvent(cwdHub, "terminal://cwd", cellId, onEvent);
+
+export const setAlwaysOnTop = (enabled: boolean) =>
+  callCommand<void>("set_always_on_top", { enabled }, () => undefined);
+
+export const minimizeToTray = () =>
+  callCommand<void>("minimize_to_tray", undefined, () => undefined);
+
+export const setWindowTitle = (title: string) =>
+  callCommand<void>("set_window_title", { title }, () => undefined);
+
+export const listWorkspaces = () =>
+  callCommand<WorkspaceManifest>("list_workspaces", undefined, () => ({
+    workspaces: [{ id: "default", name: "Default" }],
+    currentWorkspaceId: "default",
+  }));
+
+export const createWorkspace = (name: string) =>
+  callCommand<WorkspaceManifest>("create_workspace", { name }, () => ({
+    workspaces: [{ id: "default", name }],
+    currentWorkspaceId: "default",
+  }));
+
+export const deleteWorkspace = (workspaceId: string) =>
+  callCommand<WorkspaceManifest>("delete_workspace", { workspaceId }, () => ({
+    workspaces: [{ id: "default", name: "Default" }],
+    currentWorkspaceId: "default",
+  }));
+
+export const switchWorkspace = (workspaceId: string) =>
+  callCommand<WorkspaceManifest>("switch_workspace", { workspaceId }, () => ({
+    workspaces: [{ id: workspaceId, name: "Default" }],
+    currentWorkspaceId: workspaceId,
+  }));
+
+export const loadWorkspaceState = (workspaceId: string) =>
+  callCommand<AppState>("load_workspace_state", { workspaceId }, () => createDefaultAppState());
+
+export const saveWorkspaceState = (workspaceId: string, state: AppState) =>
+  callCommand<void>("save_workspace_state", { workspaceId, state }, () => undefined);

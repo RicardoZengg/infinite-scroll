@@ -97,6 +97,33 @@ export const createTerminalBridge = (options: TerminalBridgeOptions): TerminalBr
     terminal.focus();
   };
 
+  let writeBuffer = "";
+  let writeTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const flushWriteBuffer = () => {
+    writeTimer = null;
+    if (writeBuffer.length > 0) {
+      const chunk = writeBuffer;
+      writeBuffer = "";
+      terminal.write(chunk);
+    }
+  };
+
+  const scheduleWrite = (data: string) => {
+    writeBuffer += data;
+    if (writeBuffer.length >= 4096) {
+      if (writeTimer) {
+        clearTimeout(writeTimer);
+        writeTimer = null;
+      }
+      flushWriteBuffer();
+      return;
+    }
+    if (!writeTimer) {
+      writeTimer = setTimeout(flushWriteBuffer, 8);
+    }
+  };
+
   return {
     mount: (host) => {
       if (mountedHost === host) {
@@ -113,7 +140,7 @@ export const createTerminalBridge = (options: TerminalBridgeOptions): TerminalBr
       window.addEventListener("resize", onWindowResize);
     },
     write: (data) => {
-      terminal.write(data);
+      scheduleWrite(data);
     },
     setFontSize: (fontSize) => {
       terminal.options.fontSize = fontSize;
@@ -122,6 +149,14 @@ export const createTerminalBridge = (options: TerminalBridgeOptions): TerminalBr
       }
     },
     dispose: () => {
+      if (writeTimer) {
+        clearTimeout(writeTimer);
+        writeTimer = null;
+      }
+      if (writeBuffer.length > 0) {
+        terminal.write(writeBuffer);
+        writeBuffer = "";
+      }
       if (resizeTimer) {
         clearTimeout(resizeTimer);
         resizeTimer = null;

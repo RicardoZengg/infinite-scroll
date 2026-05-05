@@ -1,0 +1,162 @@
+.wrapper {
+  position: relative;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  color: var(--text-main);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.trigger svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.trigger:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--text-bright);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 200px;
+  border: 1px solid var(--panel-border-hover);
+  border-radius: var(--radius-md);
+  background: var(--panel-hover);
+  backdrop-filter: blur(30px) saturate(180%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 40;
+  padding: 4px;
+  animation: dropdownEnter 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes dropdownEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--text-main);
+  transition: background var(--transition-fast);
+}
+
+.item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.item.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.deleteBtn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.5;
+  transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+
+.deleteBtn:hover {
+  opacity: 1;
+  color: var(--danger);
+}
+
+.deleteBtn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.newWorkspaceBtn {
+  display: block;
+  width: 100%;
+  border: none;
+  border-top: 1px solid var(--panel-border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  text-align: left;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.newWorkspaceBtn:hover {
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.createRow {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-top: 1px solid var(--panel-border);
+}
+
+.createInput {
+  flex: 1;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-main);
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  outline: none;
+}
+
+.createInput:focus {
+  border-color: var(--focus);
+}
+
+.createBtn {
+  border: 1px solid var(--accent-muted);
+  border-radius: var(--radius-sm);
+  background: var(--accent-dim);
+  color: var(--accent);
+  cursor: pointer;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background var(--transition-fast);
+}
+
+.createBtn:hover {
+  background: rgba(255, 255, 255, 0.10);
+}

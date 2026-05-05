@@ -56,6 +56,7 @@ export const TerminalCell = memo(function TerminalCell({
         <div className={styles.cellHeaderLeft}>
           <span className={`${styles.statusDot} ${styles[status] ?? ""}`} />
           <span className={styles.cellLabel}>{texts.terminal}</span>
+          {cell.cwd ? <span className={styles.cwdPath} title={cell.cwd}>{cell.cwd}</span> : null}
         </div>
         <small className={styles.statusLabel}>{status}</small>
       </header>

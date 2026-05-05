@@ -11,6 +11,7 @@ type ShortcutHandlers = {
   onToggleHelp: () => void;
   onFontIncrease: () => void;
   onFontDecrease: () => void;
+  onToggleSearch?: () => void;
 };
 
 const isEditableTarget = (eventTarget: EventTarget | null): boolean => {
@@ -37,6 +38,7 @@ export const useShortcuts = ({
   onToggleHelp,
   onFontIncrease,
   onFontDecrease,
+  onToggleSearch,
 }: ShortcutHandlers): void => {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -108,6 +110,12 @@ export const useShortcuts = ({
       if (key === "-") {
         event.preventDefault();
         onFontDecrease();
+        return;
+      }
+
+      if (key.toLowerCase() === "f" && onToggleSearch) {
+        event.preventDefault();
+        onToggleSearch();
       }
     };
 
@@ -126,5 +134,6 @@ export const useShortcuts = ({
     onFontDecrease,
     onFontIncrease,
     onToggleHelp,
+    onToggleSearch,
   ]);
 };

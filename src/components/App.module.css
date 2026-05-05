@@ -60,35 +60,50 @@
   margin-left: 8px;
 }
 
-/* --- Actions: pill buttons --- */
+/* --- Actions: icon buttons --- */
 .actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
-.actions button {
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-sm);
-  padding: 4px 10px;
+  padding: 5px 10px;
   color: var(--text-main);
   background: var(--surface);
   cursor: pointer;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   white-space: nowrap;
   transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 
-.actions button:hover {
+.iconBtn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.iconBtn:hover {
   background: rgba(255, 255, 255, 0.10);
   border-color: rgba(255, 255, 255, 0.18);
   color: var(--text-bright);
 }
 
-.actions button:active {
+.iconBtn:active {
   background: rgba(255, 255, 255, 0.05);
-  transform: scale(0.98);
+  transform: scale(0.97);
+}
+
+.activeBtn {
+  color: var(--accent);
+  border-color: var(--accent-muted);
+  background: var(--accent-dim);
 }
 
 /* --- Error Boundary --- */

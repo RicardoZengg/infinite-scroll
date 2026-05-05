@@ -53,12 +53,19 @@
 .closeButton {
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-sm);
-  padding: 3px 10px;
+  padding: 4px;
   color: var(--text-muted);
   background: var(--surface);
   cursor: pointer;
-  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: all var(--transition-fast);
+}
+
+.closeButton svg {
+  width: 14px;
+  height: 14px;
 }
 
 .closeButton:hover {
@@ -102,4 +109,13 @@ kbd {
   background: var(--surface);
   text-align: center;
   white-space: nowrap;
+}
+
+.panelFooter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--panel-border);
 }

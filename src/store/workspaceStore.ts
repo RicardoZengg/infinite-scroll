@@ -32,11 +32,18 @@ type WorkspaceActions = {
   toggleHelp: () => void;
   closeHelp: () => void;
   replaceState: (state: AppState) => void;
+  moveRow: (fromIndex: number, toIndex: number) => void;
+  renameRow: (rowId: string, title: string) => void;
+  setSearchQuery: (query: string) => void;
+  toggleSearch: () => void;
+  closeSearch: () => void;
 };
 
 export type WorkspaceStoreState = AppState &
   WorkspaceActions & {
     isHelpOpen: boolean;
+    searchQuery: string;
+    isSearchOpen: boolean;
   };
 
 const resolveFocusedCellId = (
@@ -139,6 +146,8 @@ export const createWorkspaceStore = (initialState?: Partial<AppState>) =>
   createStore<WorkspaceStoreState>()((set, get) => ({
     ...normalizeAppState(initialState),
     isHelpOpen: false,
+    searchQuery: "",
+    isSearchOpen: false,
     addRowBelowFocused: () => {
       set((state) => {
         const current = normalizeAppState(state);
@@ -300,6 +309,36 @@ export const createWorkspaceStore = (initialState?: Partial<AppState>) =>
         ...normalizeAppState(state),
         isHelpOpen: current.isHelpOpen,
       }));
+    },
+    moveRow: (fromIndex, toIndex) => {
+      set((state) => {
+        const rows = [...state.rows];
+        if (fromIndex < 0 || fromIndex >= rows.length || toIndex < 0 || toIndex >= rows.length || fromIndex === toIndex) {
+          return {};
+        }
+        const [moved] = rows.splice(fromIndex, 1);
+        rows.splice(toIndex, 0, moved);
+        return { rows };
+      });
+    },
+    renameRow: (rowId, title) => {
+      set((state) => ({
+        rows: state.rows.map((row) =>
+          row.id === rowId ? { ...row, title } : row,
+        ),
+      }));
+    },
+    setSearchQuery: (query) => {
+      set(() => ({ searchQuery: query }));
+    },
+    toggleSearch: () => {
+      set((state) => ({
+        isSearchOpen: !state.isSearchOpen,
+        searchQuery: state.isSearchOpen ? "" : state.searchQuery,
+      }));
+    },
+    closeSearch: () => {
+      set(() => ({ isSearchOpen: false, searchQuery: "" }));
     },
   }));
 

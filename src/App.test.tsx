@@ -9,6 +9,10 @@ vi.mock("./components/WorkspaceCanvas", () => ({
   WorkspaceCanvas: () => <div data-testid="workspace-canvas">workspace-canvas</div>,
 }));
 
+vi.mock("./components/WorkspaceSwitcher", () => ({
+  WorkspaceSwitcher: () => <div data-testid="workspace-switcher">workspace-switcher</div>,
+}));
+
 vi.mock("./lib/tauri", () => ({
   loadState: vi.fn(async () => createDefaultAppState()),
   saveState: vi.fn(async () => undefined),
@@ -20,6 +24,30 @@ vi.mock("./lib/tauri", () => ({
   listenTerminalOutput: vi.fn(async () => () => undefined),
   listenTerminalStatus: vi.fn(async () => () => undefined),
   listenTerminalCwd: vi.fn(async () => () => undefined),
+  subscribeTerminalOutput: vi.fn(async () => () => undefined),
+  subscribeTerminalStatus: vi.fn(async () => () => undefined),
+  subscribeTerminalCwd: vi.fn(async () => () => undefined),
+  setAlwaysOnTop: vi.fn(async () => undefined),
+  minimizeToTray: vi.fn(async () => undefined),
+  setWindowTitle: vi.fn(async () => undefined),
+  listWorkspaces: vi.fn(async () => ({
+    workspaces: [{ id: "default", name: "Default" }],
+    currentWorkspaceId: "default",
+  })),
+  createWorkspace: vi.fn(async () => ({
+    workspaces: [{ id: "default", name: "Default" }],
+    currentWorkspaceId: "default",
+  })),
+  deleteWorkspace: vi.fn(async () => ({
+    workspaces: [{ id: "default", name: "Default" }],
+    currentWorkspaceId: "default",
+  })),
+  switchWorkspace: vi.fn(async () => ({
+    workspaces: [{ id: "default", name: "Default" }],
+    currentWorkspaceId: "default",
+  })),
+  loadWorkspaceState: vi.fn(async () => createDefaultAppState()),
+  saveWorkspaceState: vi.fn(async () => undefined),
 }));
 
 describe("App", () => {

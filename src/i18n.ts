@@ -9,6 +9,7 @@ export type AppTexts = {
   newRow: string;
   duplicateTerminal: string;
   help: string;
+  alwaysOnTop: string;
   languageSwitch: string;
   addNote: string;
   closeFocused: string;
@@ -31,6 +32,7 @@ const zhCNTexts: AppTexts = {
   newRow: "新建行",
   duplicateTerminal: "复制终端",
   help: "帮助",
+  alwaysOnTop: "置顶",
   languageSwitch: "English",
   addNote: "添加笔记",
   closeFocused: "关闭当前焦点",
@@ -46,6 +48,7 @@ const zhCNTexts: AppTexts = {
     { key: "Ctrl+D", description: "复制当前终端 cell" },
     { key: "Ctrl+W", description: "关闭当前焦点 cell" },
     { key: "Ctrl+Arrow", description: "在 row/cell 间移动焦点" },
+    { key: "Ctrl+F", description: "搜索/过滤行" },
     { key: "Ctrl+/", description: "显示/关闭帮助" },
     { key: "Ctrl+= / Ctrl+-", description: "调整字体大小" },
   ],
@@ -60,6 +63,7 @@ const enUSTexts: AppTexts = {
   newRow: "New Row",
   duplicateTerminal: "Duplicate Terminal",
   help: "Help",
+  alwaysOnTop: "Pin",
   languageSwitch: "中文",
   addNote: "Add note",
   closeFocused: "Close focused",
@@ -75,6 +79,7 @@ const enUSTexts: AppTexts = {
     { key: "Ctrl+D", description: "Duplicate focused terminal cell" },
     { key: "Ctrl+W", description: "Close focused cell" },
     { key: "Ctrl+Arrow", description: "Move focus between rows and cells" },
+    { key: "Ctrl+F", description: "Search / filter rows" },
     { key: "Ctrl+/", description: "Toggle shortcut help overlay" },
     { key: "Ctrl+= / Ctrl+-", description: "Adjust font size" },
   ],

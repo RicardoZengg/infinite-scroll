@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import { VariableSizeList, type ListChildComponentProps } from "react-window";
 
 import type { AppTexts } from "../i18n";
@@ -8,6 +8,7 @@ import { useShortcuts } from "../hooks/useShortcuts";
 import { useWorkspaceStore } from "../store/useWorkspaceStore";
 import type { Row, TerminalStatus } from "../types/workspace";
 import { RowView } from "./RowView";
+import { SearchPanel } from "./SearchPanel";
 
 type WorkspaceCanvasProps = {
   texts: AppTexts;
@@ -26,6 +27,8 @@ type RowItemData = {
   onUpdateNotes: (cellId: string, text: string) => void;
   onTerminalStatusChange: (cellId: string, status: TerminalStatus) => void;
   onTerminalCwdChange: (cellId: string, cwd: string) => void;
+  onMoveRow: (fromIndex: number, toIndex: number) => void;
+  onRenameRow: (rowId: string, title: string) => void;
 };
 
 const getColumnCount = (width: number): number => {
@@ -56,7 +59,7 @@ const estimateRowHeight = (
   return rowHeader + rowPadding + rowLines * baseCellHeight + Math.max(0, rowLines - 1) * rowGap;
 };
 
-const RowItem = ({ index, style, data }: ListChildComponentProps<RowItemData>) => {
+const RowItem = memo(({ index, style, data }: ListChildComponentProps<RowItemData>) => {
   const row = data.rows[index];
   const focusedCellIdInRow = row.cells.some((cell) => cell.id === data.focusedCellId)
     ? data.focusedCellId
@@ -66,6 +69,7 @@ const RowItem = ({ index, style, data }: ListChildComponentProps<RowItemData>) =
     <div style={style} className={styles.virtualRowShell}>
       <RowView
         row={row}
+        rowIndex={index}
         focusedCellIdInRow={focusedCellIdInRow}
         fontSize={data.fontSize}
         isSingleRow={data.isSingleRow}
@@ -75,16 +79,20 @@ const RowItem = ({ index, style, data }: ListChildComponentProps<RowItemData>) =
         onUpdateNotes={data.onUpdateNotes}
         onTerminalStatusChange={data.onTerminalStatusChange}
         onTerminalCwdChange={data.onTerminalCwdChange}
+        onMoveRow={data.onMoveRow}
+        onRenameRow={data.onRenameRow}
         texts={data.texts}
       />
     </div>
   );
-};
+});
 
 export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvasProps) {
   const rows = useWorkspaceStore((state) => state.rows);
   const focusedCellId = useWorkspaceStore((state) => state.focusedCellId);
   const fontSize = useWorkspaceStore((state) => state.fontSize);
+  const searchQuery = useWorkspaceStore((state) => state.searchQuery);
+  const isSearchOpen = useWorkspaceStore((state) => state.isSearchOpen);
 
   const addRowBelowFocused = useWorkspaceStore((state) => state.addRowBelowFocused);
   const duplicateFocusedTerminal = useWorkspaceStore((state) => state.duplicateFocusedTerminal);
@@ -100,9 +108,28 @@ export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvas
   const setTerminalCwd = useWorkspaceStore((state) => state.setTerminalCwd);
   const toggleHelp = useWorkspaceStore((state) => state.toggleHelp);
   const adjustFontSize = useWorkspaceStore((state) => state.adjustFontSize);
+  const moveRow = useWorkspaceStore((state) => state.moveRow);
+  const renameRow = useWorkspaceStore((state) => state.renameRow);
+  const setSearchQuery = useWorkspaceStore((state) => state.setSearchQuery);
+  const toggleSearch = useWorkspaceStore((state) => state.toggleSearch);
+  const closeSearch = useWorkspaceStore((state) => state.closeSearch);
 
   const { ref: viewportRef, size } = useElementSize();
   const listRef = useRef<VariableSizeList<RowItemData> | null>(null);
+
+  const isTerminalCell = (cell: { type: string }): cell is { type: "terminal"; cwd: string } =>
+    cell.type === "terminal";
+
+  const filteredRows = useMemo(() => {
+    if (!searchQuery.trim()) return rows;
+    const q = searchQuery.toLowerCase();
+    return rows.filter((row) => {
+      if (row.title.toLowerCase().includes(q)) return true;
+      return row.cells.some(
+        (cell) => isTerminalCell(cell) && cell.cwd.toLowerCase().includes(q),
+      );
+    });
+  }, [rows, searchQuery]);
 
   useShortcuts({
     onAddRow: addRowBelowFocused,
@@ -115,6 +142,7 @@ export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvas
     onToggleHelp: toggleHelp,
     onFontIncrease: () => adjustFontSize(1),
     onFontDecrease: () => adjustFontSize(-1),
+    onToggleSearch: toggleSearch,
   });
 
   const onCloseFocusedCell = useCallback(() => {
@@ -138,8 +166,8 @@ export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvas
 
   const rowHeights = useMemo(
     () =>
-      rows.map((row) => estimateRowHeight(row, size.width, size.height, rows.length === 1)),
-    [rows, size.height, size.width],
+      filteredRows.map((row) => estimateRowHeight(row, size.width, size.height, filteredRows.length === 1)),
+    [filteredRows, size.height, size.width],
   );
 
   const getItemSize = useCallback((index: number) => rowHeights[index] ?? 420, [rowHeights]);
@@ -153,8 +181,8 @@ export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvas
       return -1;
     }
 
-    return rows.findIndex((row) => row.cells.some((cell) => cell.id === focusedCellId));
-  }, [focusedCellId, rows]);
+    return filteredRows.findIndex((row) => row.cells.some((cell) => cell.id === focusedCellId));
+  }, [focusedCellId, filteredRows]);
 
   useEffect(() => {
     if (focusedRowIndex >= 0) {
@@ -164,30 +192,34 @@ export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvas
 
   const itemData = useMemo<RowItemData>(
     () => ({
-      rows,
+      rows: filteredRows,
       focusedCellId,
       fontSize,
       texts,
-      isSingleRow: rows.length === 1,
+      isSingleRow: filteredRows.length === 1,
       onFocusCell: setFocusedCellId,
       onCloseFocusedCell,
       onAddNotesToRow,
       onUpdateNotes: updateNotesCell,
       onTerminalStatusChange: setTerminalStatus,
       onTerminalCwdChange: setTerminalCwd,
+      onMoveRow: moveRow,
+      onRenameRow: renameRow,
     }),
     [
-      rows,
+      filteredRows,
       focusedCellId,
       fontSize,
       texts,
       setFocusedCellId,
-      rows.length,
+      filteredRows.length,
       onCloseFocusedCell,
       onAddNotesToRow,
       updateNotesCell,
       setTerminalStatus,
       setTerminalCwd,
+      moveRow,
+      renameRow,
     ],
   );
 
@@ -207,32 +239,36 @@ export function WorkspaceCanvas({ texts, onActiveRowIdsChange }: WorkspaceCanvas
         return;
       }
 
-      const activeIds = rows
+      const activeIds = filteredRows
         .slice(
           Math.max(0, overscanStartIndex),
-          Math.min(rows.length, overscanStopIndex + 1),
+          Math.min(filteredRows.length, overscanStopIndex + 1),
         )
         .map((row) => row.id);
       onActiveRowIdsChange(activeIds);
     },
-    [onActiveRowIdsChange, rows],
+    [onActiveRowIdsChange, filteredRows],
   );
 
   return (
     <div
-      className={`${styles.canvas}${rows.length === 1 ? ` ${styles.singleRow}` : ""}`}
+      className={`${styles.canvas}${filteredRows.length === 1 ? ` ${styles.singleRow}` : ""}`}
       data-testid="workspace-canvas"
       ref={viewportRef}
     >
+      {isSearchOpen && (
+        <SearchPanel query={searchQuery} onQueryChange={setSearchQuery} onClose={closeSearch} />
+      )}
       <VariableSizeList<RowItemData>
         className={styles.virtualList}
         ref={listRef}
         width={size.width}
-        height={size.height}
-        itemCount={rows.length}
+        height={isSearchOpen ? size.height - 48 : size.height}
+        itemCount={filteredRows.length}
         itemSize={getItemSize}
         itemData={itemData}
         itemKey={itemKey}
+        overscanCount={1}
         onItemsRendered={handleItemsRendered}
       >
         {RowItem}

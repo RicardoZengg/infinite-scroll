@@ -10,9 +10,80 @@ pub fn run() {
             commands::terminal::resize_terminal,
             commands::terminal::close_terminal_session,
             commands::terminal::restart_terminal_session,
+            commands::window::set_always_on_top,
+            commands::window::minimize_to_tray,
+            commands::window::set_window_title,
+            commands::workspace::list_workspaces,
+            commands::workspace::create_workspace,
+            commands::workspace::delete_workspace,
+            commands::workspace::switch_workspace,
+            commands::workspace::load_workspace_state,
+            commands::workspace::save_workspace_state,
         ])
+        .setup(|app| {
+            setup_tray(app)?;
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+fn setup_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
+    use tauri::menu::{MenuBuilder, MenuItemBuilder, PredefinedMenuItem};
+    use tauri::tray::TrayIconBuilder;
+
+    let show_item = MenuItemBuilder::with_id("show", "Show Window").build(app)?;
+    let always_on_top_item = MenuItemBuilder::with_id("always_on_top", "Always on Top").build(app)?;
+    let separator = PredefinedMenuItem::separator(app)?;
+    let quit_item = MenuItemBuilder::with_id("quit", "Quit").build(app)?;
+
+    let menu = MenuBuilder::new(app)
+        .item(&show_item)
+        .item(&always_on_top_item)
+        .item(&separator)
+        .item(&quit_item)
+        .build()?;
+
+    let _tray = TrayIconBuilder::new()
+        .menu(&menu)
+        .tooltip("Infinite Scroll")
+        .on_menu_event(move |app, event| {
+            match event.id().as_ref() {
+                "show" => {
+                    if let Some(window) = app.get_webview_window("main") {
+                        let _ = window.show();
+                        let _ = window.set_focus();
+                    }
+                }
+                "always_on_top" => {
+                    if let Some(window) = app.get_webview_window("main") {
+                        let is_top = window.is_always_on_top().unwrap_or(false);
+                        let _ = window.set_always_on_top(!is_top);
+                    }
+                }
+                "quit" => {
+                    app.exit(0);
+                }
+                _ => {}
+            }
+        })
+        .on_tray_icon_event(|tray, event| {
+            if let tauri::tray::TrayIconEvent::Click {
+                button: tauri::tray::MouseButton::Left,
+                button_state: tauri::tray::MouseButtonState::Up,
+                ..
+            } = event
+            {
+                let app = tray.app_handle();
+                if let Some(window) = app.get_webview_window("main") {
+                    let _ = window.show();
+                    let _ = window.set_focus();
+                }
+            }
+        })
+        .build(app)?;
+
+    Ok(())
 }
 
 pub mod commands;
